@@ -45,7 +45,7 @@ class Home extends StatelessWidget {
                 itemCount: items.length,
                 itemBuilder: (context, index) {
                   return ListTile(
-                    title: Text(items[index]['title']),
+                    title: Text(items[index].title),
                   );
                 },
               );

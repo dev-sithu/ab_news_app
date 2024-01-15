@@ -1,4 +1,5 @@
 import 'package:ab_news_app/config/constants.dart';
+import 'package:ab_news_app/models/news_model.dart';
 import 'package:dio/dio.dart';
 
 class NewsApiService {
@@ -12,14 +13,14 @@ class NewsApiService {
 
     for (var id in topNews) {
       var news = await getStory(id);
-      newsList.add(news);
+      newsList.add(NewsModel.fromJson(news));
     }
 
     return Future.value(newsList);
   }
 
   /// Get news details
-  Future<Object> getStory(int id) async {
+  Future<Map<String, dynamic>> getStory(int id) async {
     final response = await dio.get('$newsAPIBaseURL/item/$id.json');
 
     return response.data;
