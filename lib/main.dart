@@ -1,5 +1,5 @@
 import 'package:ab_news_app/config/app_theme.dart';
-import 'package:ab_news_app/views/home.dart';
+import 'package:ab_news_app/pages/home.dart';
 import 'package:flutter/material.dart';
 
 void main() {
