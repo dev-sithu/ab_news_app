@@ -1,5 +1,5 @@
 import 'package:ab_news_app/config/app_theme.dart';
-import 'package:ab_news_app/pages/home.dart';
+import 'package:ab_news_app/widgets/navigation_tab.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: theme(),
-      home: const Home(),
+      home: const NavigationTab(),
     );
   }
 }

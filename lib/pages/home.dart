@@ -1,5 +1,6 @@
 import 'package:ab_news_app/services/news_api_service.dart';
 import 'package:ab_news_app/widgets/news.dart';
+import 'package:ab_news_app/widgets/title_bar.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatelessWidget {
@@ -13,13 +14,7 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
-        title: const Text(
-          'AB News',
-          style: TextStyle(color: Colors.white),
-        ),
-      ),
+      appBar: titleBar(context, 'AB News'),
       body: FutureBuilder(
         // Future that needs to be resolved
         // in order to display something on the Canvas
