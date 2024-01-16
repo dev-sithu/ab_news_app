@@ -1,5 +1,6 @@
 import 'package:ab_news_app/pages/favorites.dart';
 import 'package:ab_news_app/pages/home.dart';
+import 'package:ab_news_app/pages/login.dart';
 import 'package:ab_news_app/pages/register.dart';
 import 'package:flutter/material.dart';
 
@@ -12,6 +13,38 @@ class NavigationTab extends StatefulWidget {
 
 class _NavigationTabState extends State<NavigationTab> {
   int currentPageIndex = 0;
+  List<Widget> pages = [];
+
+  @override
+  void initState() {
+    pages = [
+      const Home(),
+      const Favorites(),
+      Register(goToLogin),
+    ];
+
+    super.initState();
+  }
+
+  void goToLogin() {
+    setState(() {
+      pages = [
+        const Home(),
+        const Favorites(),
+        Login(goToRegister),
+      ];
+    });
+  }
+
+  void goToRegister() {
+    setState(() {
+      pages = [
+        const Home(),
+        const Favorites(),
+        Register(goToLogin),
+      ];
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,14 +73,7 @@ class _NavigationTabState extends State<NavigationTab> {
           ),
         ],
       ),
-      body: <Widget>[
-        /// Home page
-        const Home(),
-        /// Favorites page
-        const Favorites(),
-        /// User registration page
-        const Register()
-      ][currentPageIndex],
+      body: pages[currentPageIndex],
     );
   }
 }

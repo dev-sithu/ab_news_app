@@ -1,24 +1,22 @@
 import 'package:ab_news_app/widgets/title_bar.dart';
 import 'package:flutter/material.dart';
 
-class Register extends StatefulWidget {
-  final dynamic goToLogin;
-  const Register(this.goToLogin, {super.key});
+class Login extends StatefulWidget {
+  final dynamic goToRegister;
+  const Login(this.goToRegister, {super.key});
 
   @override
-  State<Register> createState() => _RegisterState();
+  State<Login> createState() => _LoginState();
 }
 
-class _RegisterState extends State<Register> {
+class _LoginState extends State<Login> {
   late final TextEditingController _username;
   late final TextEditingController _password;
-  late final TextEditingController _rePassword;
 
   @override
   void initState() {
-    _username   = TextEditingController();
-    _password   = TextEditingController();
-    _rePassword = TextEditingController();
+    _username = TextEditingController();
+    _password = TextEditingController();
 
     super.initState();
   }
@@ -34,7 +32,7 @@ class _RegisterState extends State<Register> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: titleBar(context, 'Sign Up'),
+      appBar: titleBar(context, 'Sign In'),
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -57,32 +55,21 @@ class _RegisterState extends State<Register> {
                 hintText: 'Enter your password here',
               ),
             ),
-            TextField(
-              controller: _rePassword,
-              obscureText: true,
-              enableSuggestions: false,
-              autocorrect: false,
-              decoration: const InputDecoration(
-                hintText: 'Re-type the password here',
-              ),
-            ),
             TextButton(
               onPressed: () async {
-                final username    = _username.text;
-                final password    = _password.text;
-                final rePassword  = _rePassword.text;
+                final username = _username.text;
+                final password = _password.text;
 
                 print(username);
                 print(password);
-                print(rePassword);
 
-                // TODO: register logic
+                // TODO: Login logic
               },
-              child: const Text('Register'),
+              child: const Text('Login'),
             ),
             TextButton(
-              onPressed: widget.goToLogin,
-              child: const Text('Already have an account?, login here')
+              onPressed: widget.goToRegister,
+              child: const Text('Not registered yet?, sign up here')
             )
           ],
         ),
