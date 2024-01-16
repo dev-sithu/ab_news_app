@@ -7,13 +7,18 @@ import 'package:url_launcher/url_launcher.dart';
 
 class NewsWidget extends StatelessWidget {
   final NewsModel news;
-  
+
   const NewsWidget({super.key, required this.news});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsetsDirectional.only(start: 10, end: 10, bottom: 5, top: 5),
+      padding: const EdgeInsetsDirectional.all(10.0),
+      decoration: const BoxDecoration(
+        border: Border(
+          bottom: BorderSide(color: Color(0xffdedede), width: 1.0),
+        ),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -46,11 +51,24 @@ class NewsWidget extends StatelessWidget {
               ],
             ),
           ),
-          Text(
-            news.author != null ? 'by ${news.author}' : '',
-            style: const TextStyle(
-              color: Colors.black87,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                news.author != null ? 'by ${news.author}' : '',
+                style: const TextStyle(
+                  color: Colors.black87,
+                ),
+              ),
+              ElevatedButton.icon(
+                onPressed: () => {
+                  // TODO: favorite logic (to db)
+                  print('Favorited!')
+                },
+                icon: const Icon(Icons.favorite_border),
+                label: const Text('Favorite'),
+              )
+            ],
           ),
         ],
       ),
