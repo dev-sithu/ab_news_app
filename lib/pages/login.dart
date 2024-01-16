@@ -55,7 +55,14 @@ class _LoginState extends State<Login> {
                 hintText: 'Enter your password here',
               ),
             ),
+            const SizedBox(height: 10),
             TextButton(
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.blueAccent,
+                padding: const EdgeInsets.all(20.0),
+                textStyle: const TextStyle(fontSize: 20),
+              ),
               onPressed: () async {
                 final username = _username.text;
                 final password = _password.text;
@@ -67,9 +74,10 @@ class _LoginState extends State<Login> {
               },
               child: const Text('Login'),
             ),
+            const SizedBox(height: 10),
             TextButton(
               onPressed: widget.goToRegister,
-              child: const Text('Not registered yet?, sign up here')
+              child: const Text('Not registered yet? sign up here')
             )
           ],
         ),

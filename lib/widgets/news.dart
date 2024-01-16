@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:ab_news_app/models/news_model.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';

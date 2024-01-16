@@ -66,7 +66,14 @@ class _RegisterState extends State<Register> {
                 hintText: 'Re-type the password here',
               ),
             ),
+            const SizedBox(height: 10),
             TextButton(
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.blueAccent,
+                padding: const EdgeInsets.all(20.0),
+                textStyle: const TextStyle(fontSize: 20),
+              ),
               onPressed: () async {
                 final username    = _username.text;
                 final password    = _password.text;
@@ -80,9 +87,10 @@ class _RegisterState extends State<Register> {
               },
               child: const Text('Register'),
             ),
+            const SizedBox(height: 10),
             TextButton(
               onPressed: widget.goToLogin,
-              child: const Text('Already have an account?, login here')
+              child: const Text('Already have an account? login here')
             )
           ],
         ),
