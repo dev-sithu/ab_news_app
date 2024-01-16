@@ -7,7 +7,7 @@ class Home extends StatelessWidget {
 
   getData() {
     final api = NewsApiService();
-    return api.getTopStories();
+    return api.getNewStories();
   }
 
   @override
