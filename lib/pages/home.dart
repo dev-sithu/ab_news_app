@@ -1,4 +1,5 @@
 import 'package:ab_news_app/services/news_api_service.dart';
+import 'package:ab_news_app/widgets/news.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatelessWidget {
@@ -42,11 +43,10 @@ class Home extends StatelessWidget {
               final items = snapshot.data as List;
 
               return ListView.builder(
+                padding: const EdgeInsets.all(10),
                 itemCount: items.length,
                 itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(items[index].title),
-                  );
+                  return NewsWidget(news: items[index]);
                 },
               );
             }

@@ -8,7 +8,7 @@ class NewsApiService {
   // Get recent news
   Future<List<dynamic>> getTopStories() async {
     final response = await dio.get('$newsAPIBaseURL/topstories.json');
-    final topNews = response.data.sublist(0, 2);
+    final topNews = response.data.sublist(0, 20);
     List<Object> newsList = [];
 
     for (var id in topNews) {
