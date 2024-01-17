@@ -9,7 +9,7 @@ mixin AutoIncrementingPrimaryKey on Table {
 @DataClassName('User')
 class Users extends Table with AutoIncrementingPrimaryKey {
   TextColumn get username => text().withLength(max: 100)();
-  TextColumn get password => text().withLength(min: 6, max: 20)();
+  TextColumn get password => text().withLength(max: 255)();
 }
 
 // favorites table
