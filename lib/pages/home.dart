@@ -1,3 +1,4 @@
+import 'package:ab_news_app/inject_container.dart';
 import 'package:ab_news_app/services/news_api_service.dart';
 import 'package:ab_news_app/widgets/article.dart';
 import 'package:ab_news_app/widgets/title_bar.dart';
@@ -7,7 +8,7 @@ class Home extends StatelessWidget {
   const Home({super.key});
 
   getData() {
-    final api = NewsApiService();
+    final api = getIt<NewsApiService>();
     return api.getNewStories();
   }
 

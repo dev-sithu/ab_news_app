@@ -1,19 +1,17 @@
 import 'package:ab_news_app/config/app_theme.dart';
-// import 'package:ab_news_app/database/database.dart';
+import 'package:ab_news_app/inject_container.dart';
 import 'package:ab_news_app/widgets/navigation_tab.dart';
 import 'package:flutter/material.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  // final database = AppDatabase();
+  await initDependencies();
 
   // await database.into(database.users).insert(UsersCompanion.insert(
-  //       username: 'admin',
-  //       password: 'password',
-  //     ));
+  //     username: 'admin',
+  //     password: 'password',
+  //   ));
   // List<User> allItems = await database.select(database.users).get();
-
   // print('items in database: $allItems');
 
   runApp(const MyApp());
