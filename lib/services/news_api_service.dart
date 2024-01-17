@@ -3,7 +3,9 @@ import 'package:ab_news_app/models/article_model.dart';
 import 'package:dio/dio.dart';
 
 class NewsApiService {
-  final dio = Dio();
+  final Dio dio;
+
+  NewsApiService(this.dio);
 
   // Get recent news
   Future<List<dynamic>> getNewStories() async {
