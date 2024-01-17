@@ -43,6 +43,7 @@ dependencies:
   path_provider: ^2.1.2
   sqlite3: ^2.3.0
   get_it: ^7.6.6
+  password_dart: ^2.0.1
 
 dev_dependencies:
   flutter_test:

@@ -1,3 +1,5 @@
+import 'package:ab_news_app/inject_container.dart';
+import 'package:ab_news_app/services/user_service.dart';
 import 'package:ab_news_app/widgets/title_bar.dart';
 import 'package:flutter/material.dart';
 
@@ -79,11 +81,31 @@ class _RegisterState extends State<Register> {
                 final password    = _password.text;
                 final rePassword  = _rePassword.text;
 
-                print(username);
-                print(password);
-                print(rePassword);
+                // Validation
+                if (username.isEmpty) {
+                  debugPrint('Username is required.');
+                  return;
+                }
 
-                // TODO: register logic
+                if (password.isEmpty) {
+                  debugPrint('Password is required.');
+                  return;
+                }
+
+                if (rePassword.isEmpty) {
+                  debugPrint('Re-type the password.');
+                  return;
+                }
+
+                if (password != rePassword) {
+                  debugPrint('Password does not match.');
+                  return;
+                }
+
+                // Register user
+                await getIt<UserService>().insertUser(username, password);
+                // Check if user was inserted
+                await getIt<UserService>().getUsers();
               },
               child: const Text('Register'),
             ),
