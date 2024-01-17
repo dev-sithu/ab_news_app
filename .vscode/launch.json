@@ -1,0 +1,11 @@
+{
+  "version": "1.0.0",
+  "configurations": [
+    {
+      "name": "Flutter",
+      "request": "launch",
+      "type": "dart",
+      "args": ["-d", "chrome","--web-port", "62188"],
+    }
+  ]
+}
