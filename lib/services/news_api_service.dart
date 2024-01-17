@@ -1,5 +1,5 @@
 import 'package:ab_news_app/config/constants.dart';
-import 'package:ab_news_app/models/news_model.dart';
+import 'package:ab_news_app/models/article_model.dart';
 import 'package:dio/dio.dart';
 
 class NewsApiService {
@@ -13,7 +13,7 @@ class NewsApiService {
 
     for (var id in topNews) {
       var news = await getStory(id);
-      newsList.add(NewsModel.fromJson(news));
+      newsList.add(ArticleModel.fromJson(news));
     }
 
     return Future.value(newsList);

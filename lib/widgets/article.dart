@@ -1,12 +1,12 @@
-import 'package:ab_news_app/models/news_model.dart';
+import 'package:ab_news_app/models/article_model.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class NewsWidget extends StatelessWidget {
-  final NewsModel news;
+class ArticleWidget extends StatelessWidget {
+  final ArticleModel article;
 
-  const NewsWidget({super.key, required this.news});
+  const ArticleWidget({super.key, required this.article});
 
   @override
   Widget build(BuildContext context) {
@@ -24,20 +24,20 @@ class NewsWidget extends StatelessWidget {
             TextSpan(
               children: [
                 TextSpan(
-                  text: news.title,
+                  text: article.title,
                   style: const TextStyle(
                     fontWeight: FontWeight.bold
                   ),
                 ),
                 const WidgetSpan(child: SizedBox(width: 10)),
                 TextSpan(
-                  text: news.url,
+                  text: article.url,
                   style: const TextStyle(
                     color: Colors.blue,
                   ),
                   recognizer: TapGestureRecognizer()
                   ..onTap = () async {
-                    final url = Uri.parse(news.url ?? '');
+                    final url = Uri.parse(article.url ?? '');
 
                     if (await canLaunchUrl(url)) {
                       await launchUrl(url);
@@ -53,7 +53,7 @@ class NewsWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                news.author != null ? 'by ${news.author}' : '',
+                article.author != null ? 'by ${article.author}' : '',
                 style: const TextStyle(
                   color: Colors.black87,
                 ),

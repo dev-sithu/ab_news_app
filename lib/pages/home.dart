@@ -1,5 +1,5 @@
 import 'package:ab_news_app/services/news_api_service.dart';
-import 'package:ab_news_app/widgets/news.dart';
+import 'package:ab_news_app/widgets/article.dart';
 import 'package:ab_news_app/widgets/title_bar.dart';
 import 'package:flutter/material.dart';
 
@@ -30,7 +30,7 @@ class Home extends StatelessWidget {
                   style: const TextStyle(fontSize: 18),
                 ),
               );
-            } 
+            }
 
             // if we got our data
             if (snapshot.hasData) {
@@ -41,7 +41,7 @@ class Home extends StatelessWidget {
                 padding: const EdgeInsets.all(10),
                 itemCount: items.length,
                 itemBuilder: (context, index) {
-                  return NewsWidget(news: items[index]);
+                  return ArticleWidget(article: items[index]);
                 },
               );
             }
