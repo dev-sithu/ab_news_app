@@ -22,6 +22,7 @@ class Favorites extends Table with AutoIncrementingPrimaryKey {
 // articles (news) table
 @DataClassName('Article')
 class Articles extends Table with AutoIncrementingPrimaryKey {
+  IntColumn get itemId      => integer()(); // item id from API
   TextColumn get type       => text().withLength(max: 20)();
   TextColumn get title      => text().withLength(max: 500)();
   TextColumn get author     => text().withLength(max: 255).nullable()();

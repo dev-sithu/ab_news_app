@@ -437,6 +437,11 @@ class $ArticlesTable extends Articles with TableInfo<$ArticlesTable, Article> {
       requiredDuringInsert: false,
       defaultConstraints:
           GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _itemIdMeta = const VerificationMeta('itemId');
+  @override
+  late final GeneratedColumn<int> itemId = GeneratedColumn<int>(
+      'item_id', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
   static const VerificationMeta _typeMeta = const VerificationMeta('type');
   @override
   late final GeneratedColumn<String> type = GeneratedColumn<String>(
@@ -483,7 +488,7 @@ class $ArticlesTable extends Articles with TableInfo<$ArticlesTable, Article> {
       type: DriftSqlType.int, requiredDuringInsert: false);
   @override
   List<GeneratedColumn> get $columns =>
-      [id, type, title, author, url, score, time, descendants];
+      [id, itemId, type, title, author, url, score, time, descendants];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -496,6 +501,12 @@ class $ArticlesTable extends Articles with TableInfo<$ArticlesTable, Article> {
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('item_id')) {
+      context.handle(_itemIdMeta,
+          itemId.isAcceptableOrUnknown(data['item_id']!, _itemIdMeta));
+    } else if (isInserting) {
+      context.missing(_itemIdMeta);
     }
     if (data.containsKey('type')) {
       context.handle(
@@ -542,6 +553,8 @@ class $ArticlesTable extends Articles with TableInfo<$ArticlesTable, Article> {
     return Article(
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      itemId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}item_id'])!,
       type: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}type'])!,
       title: attachedDatabase.typeMapping
@@ -567,6 +580,7 @@ class $ArticlesTable extends Articles with TableInfo<$ArticlesTable, Article> {
 
 class Article extends DataClass implements Insertable<Article> {
   final int id;
+  final int itemId;
   final String type;
   final String title;
   final String? author;
@@ -576,6 +590,7 @@ class Article extends DataClass implements Insertable<Article> {
   final int? descendants;
   const Article(
       {required this.id,
+      required this.itemId,
       required this.type,
       required this.title,
       this.author,
@@ -587,6 +602,7 @@ class Article extends DataClass implements Insertable<Article> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
+    map['item_id'] = Variable<int>(itemId);
     map['type'] = Variable<String>(type);
     map['title'] = Variable<String>(title);
     if (!nullToAbsent || author != null) {
@@ -610,6 +626,7 @@ class Article extends DataClass implements Insertable<Article> {
   ArticlesCompanion toCompanion(bool nullToAbsent) {
     return ArticlesCompanion(
       id: Value(id),
+      itemId: Value(itemId),
       type: Value(type),
       title: Value(title),
       author:
@@ -629,6 +646,7 @@ class Article extends DataClass implements Insertable<Article> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return Article(
       id: serializer.fromJson<int>(json['id']),
+      itemId: serializer.fromJson<int>(json['itemId']),
       type: serializer.fromJson<String>(json['type']),
       title: serializer.fromJson<String>(json['title']),
       author: serializer.fromJson<String?>(json['author']),
@@ -643,6 +661,7 @@ class Article extends DataClass implements Insertable<Article> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
+      'itemId': serializer.toJson<int>(itemId),
       'type': serializer.toJson<String>(type),
       'title': serializer.toJson<String>(title),
       'author': serializer.toJson<String?>(author),
@@ -655,6 +674,7 @@ class Article extends DataClass implements Insertable<Article> {
 
   Article copyWith(
           {int? id,
+          int? itemId,
           String? type,
           String? title,
           Value<String?> author = const Value.absent(),
@@ -664,6 +684,7 @@ class Article extends DataClass implements Insertable<Article> {
           Value<int?> descendants = const Value.absent()}) =>
       Article(
         id: id ?? this.id,
+        itemId: itemId ?? this.itemId,
         type: type ?? this.type,
         title: title ?? this.title,
         author: author.present ? author.value : this.author,
@@ -676,6 +697,7 @@ class Article extends DataClass implements Insertable<Article> {
   String toString() {
     return (StringBuffer('Article(')
           ..write('id: $id, ')
+          ..write('itemId: $itemId, ')
           ..write('type: $type, ')
           ..write('title: $title, ')
           ..write('author: $author, ')
@@ -688,13 +710,14 @@ class Article extends DataClass implements Insertable<Article> {
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, type, title, author, url, score, time, descendants);
+  int get hashCode => Object.hash(
+      id, itemId, type, title, author, url, score, time, descendants);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is Article &&
           other.id == this.id &&
+          other.itemId == this.itemId &&
           other.type == this.type &&
           other.title == this.title &&
           other.author == this.author &&
@@ -706,6 +729,7 @@ class Article extends DataClass implements Insertable<Article> {
 
 class ArticlesCompanion extends UpdateCompanion<Article> {
   final Value<int> id;
+  final Value<int> itemId;
   final Value<String> type;
   final Value<String> title;
   final Value<String?> author;
@@ -715,6 +739,7 @@ class ArticlesCompanion extends UpdateCompanion<Article> {
   final Value<int?> descendants;
   const ArticlesCompanion({
     this.id = const Value.absent(),
+    this.itemId = const Value.absent(),
     this.type = const Value.absent(),
     this.title = const Value.absent(),
     this.author = const Value.absent(),
@@ -725,6 +750,7 @@ class ArticlesCompanion extends UpdateCompanion<Article> {
   });
   ArticlesCompanion.insert({
     this.id = const Value.absent(),
+    required int itemId,
     required String type,
     required String title,
     this.author = const Value.absent(),
@@ -732,10 +758,12 @@ class ArticlesCompanion extends UpdateCompanion<Article> {
     this.score = const Value.absent(),
     this.time = const Value.absent(),
     this.descendants = const Value.absent(),
-  })  : type = Value(type),
+  })  : itemId = Value(itemId),
+        type = Value(type),
         title = Value(title);
   static Insertable<Article> custom({
     Expression<int>? id,
+    Expression<int>? itemId,
     Expression<String>? type,
     Expression<String>? title,
     Expression<String>? author,
@@ -746,6 +774,7 @@ class ArticlesCompanion extends UpdateCompanion<Article> {
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
+      if (itemId != null) 'item_id': itemId,
       if (type != null) 'type': type,
       if (title != null) 'title': title,
       if (author != null) 'author': author,
@@ -758,6 +787,7 @@ class ArticlesCompanion extends UpdateCompanion<Article> {
 
   ArticlesCompanion copyWith(
       {Value<int>? id,
+      Value<int>? itemId,
       Value<String>? type,
       Value<String>? title,
       Value<String?>? author,
@@ -767,6 +797,7 @@ class ArticlesCompanion extends UpdateCompanion<Article> {
       Value<int?>? descendants}) {
     return ArticlesCompanion(
       id: id ?? this.id,
+      itemId: itemId ?? this.itemId,
       type: type ?? this.type,
       title: title ?? this.title,
       author: author ?? this.author,
@@ -782,6 +813,9 @@ class ArticlesCompanion extends UpdateCompanion<Article> {
     final map = <String, Expression>{};
     if (id.present) {
       map['id'] = Variable<int>(id.value);
+    }
+    if (itemId.present) {
+      map['item_id'] = Variable<int>(itemId.value);
     }
     if (type.present) {
       map['type'] = Variable<String>(type.value);
@@ -811,6 +845,7 @@ class ArticlesCompanion extends UpdateCompanion<Article> {
   String toString() {
     return (StringBuffer('ArticlesCompanion(')
           ..write('id: $id, ')
+          ..write('itemId: $itemId, ')
           ..write('type: $type, ')
           ..write('title: $title, ')
           ..write('author: $author, ')
