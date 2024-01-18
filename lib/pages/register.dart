@@ -103,9 +103,8 @@ class _RegisterState extends State<Register> {
                 }
 
                 // Register user
-                await getIt<UserService>().insertUser(username, password);
-                // Check if user was inserted
-                await getIt<UserService>().getUsers();
+                var user = await getIt<UserService>().create(username, password);
+                debugPrint(user.toString());
               },
               child: const Text('Register'),
             ),

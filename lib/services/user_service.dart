@@ -1,5 +1,4 @@
 import 'package:ab_news_app/database/database.dart';
-import 'package:flutter/material.dart';
 import 'package:password_dart/password_dart.dart';
 
 class UserService {
@@ -7,21 +6,24 @@ class UserService {
 
   UserService(this.db);
 
-  // Insert a user
-  Future<int> insertUser(String username, String password) async {
+  /// Insert a user
+  Future<User> create(String username, String password) async {
     final pwd = Password.hash('password', PBKDF2());
 
-    return await db.into(db.users).insert(UsersCompanion.insert(
+    return await db.into(db.users).insertReturning(UsersCompanion.insert(
       username: username,
       password: pwd,
     ));
   }
 
-  /// Get all users
-  Future<List<User>> getUsers() async {
-    List<User> users = await db.select(db.users).get();
-    debugPrint('users in database: $users');
+  /// Find a user by id
+  Future<User?> find(int id) async {
+    return await (db.select(db.users)..where((t) => t.id.equals(id)))
+      .getSingleOrNull();
+  }
 
-    return users;
+  /// Get all users
+  Future<List<User>> findAll() async {
+    return await db.select(db.users).get();
   }
 }
