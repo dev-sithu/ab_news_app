@@ -14,11 +14,11 @@ class NewsApiService {
   // Get recent news
   Future<List<dynamic>> getNewStories() async {
     final response = await dio.get('$newsAPIBaseURL/newstories.json');
-    final topNews = response.data.sublist(0, 3);
+    final recentNews = response.data.sublist(0, 15);
     List<Object> newsList = [];
     ArticleService articleService = getIt<ArticleService>();
 
-    for (var id in topNews) {
+    for (var id in recentNews) {
       debugPrint('trying to get local story ...');
       Article ? item = await articleService.findByItem(id);
 
@@ -33,15 +33,8 @@ class NewsApiService {
         news = await getStory(id);
 
         debugPrint('inserting into db');
-        Article inserted = await articleService.create({
-          'type': news['type'],
-          'itemId': news['id'],
-          'author': news['by'],
-          'title': news['title'],
-          'url': news['url'],
-          'score': news['score'],
-          'descendants': news['descendants'],
-        });
+        debugPrint(news.toString());
+        Article inserted = await articleService.create(ArticleService.fieldMapper(news));
         debugPrint(inserted.toString());
       }
 

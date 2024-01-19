@@ -8,16 +8,31 @@ class ArticleService {
 
   ArticleService(this.db);
 
+  /// Map json from API to table fields
+  static Map<String, dynamic> fieldMapper(Map<String, dynamic> data) {
+    return {
+      'itemId': data['id'],
+      'type': data['type'],
+      'author': data['by'],
+      'title': data['title'],
+      'url': data['url'] ?? '',
+      'score': data['score'],
+      'time': data['time'],
+      'descendants': data['descendants'],
+    };
+  }
+
   /// Insert a news article
   Future<Article> create(Map<String, dynamic> data) async {
     return await db.into(db.articles).insertReturning(ArticlesCompanion.insert(
         itemId: data['itemId'],
         type: data['type'],
         title: data['title'],
-        author: Value(data['by'] ?? ''),
-        url: Value(data['url'] ?? ''),
-        score: Value(data['score'] ?? 0),
-        descendants: Value(data['descendants'] ?? 0),
+        author: Value(data['author'] ?? Null),
+        url: Value(data['url'] ?? Null),
+        score: Value(data['score'] ?? Null),
+        time: Value(data['time'] ?? Null),
+        descendants: Value(data['descendants'] ?? Null),
     ));
   }
 
