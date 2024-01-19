@@ -8,7 +8,7 @@ class UserService {
 
   /// Insert a user
   Future<User> create(String username, String password) async {
-    final pwd = Password.hash('password', PBKDF2());
+    final pwd = Password.hash(password, PBKDF2());
 
     return await db.into(db.users).insertReturning(UsersCompanion.insert(
       username: username,
@@ -18,8 +18,20 @@ class UserService {
 
   /// Find a user by id
   Future<User?> find(int id) async {
-    return await (db.select(db.users)..where((t) => t.id.equals(id)))
-      .getSingleOrNull();
+    final query = db.select(db.users)
+      ..where((t) => t.id.equals(id))
+      ..limit(1);
+
+    return query.getSingleOrNull();
+  }
+
+  /// Find a user by username
+  Future<User?> findByUsername(String username) async {
+    final query = db.select(db.users)
+        ..where((t) => t.username.equals(username))
+        ..limit(1);
+
+    return query.getSingleOrNull();
   }
 
   /// Get all users
