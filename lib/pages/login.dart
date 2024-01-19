@@ -1,5 +1,6 @@
 import 'package:ab_news_app/database/database.dart';
 import 'package:ab_news_app/inject_container.dart';
+import 'package:ab_news_app/services/auth_service.dart';
 import 'package:ab_news_app/services/user_service.dart';
 import 'package:ab_news_app/widgets/title_bar.dart';
 import 'package:flutter/material.dart';
@@ -82,20 +83,14 @@ class _LoginState extends State<Login> {
                   return;
                 }
 
-                User? user = await getIt<UserService>().findByUsername(username);
-                if (user == null) {
-                  debugPrint('Username does not exist.');
+                final result = await getIt<AuthService>().login(username, password);
+                if (result is String) {
+                  debugPrint(result);
                   return;
                 }
 
-                debugPrint('Verifying password...');
-                if (!Password.verify(password, user.password)) {
-                  debugPrint('Password does not match.');
-                  return;
-                }
-
-                // TODO: Login logic
-                debugPrint('proceed to login...');
+                // TODO: redirect or something
+                debugPrint('redirect or something to do');
               },
               child: const Text('Login'),
             ),

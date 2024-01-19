@@ -44,6 +44,7 @@ dependencies:
   sqlite3: ^2.3.0
   get_it: ^7.6.6
   password_dart: ^2.0.1
+  flutter_secure_storage: ^9.0.0
 
 dev_dependencies:
   flutter_test:
