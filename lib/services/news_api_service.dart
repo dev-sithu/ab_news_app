@@ -26,7 +26,7 @@ class NewsApiService {
       if (item != null) {
         // if there is related article in db
         debugPrint('item_id=${item.itemId} returned from db');
-        news = item.toJson();
+        news = ArticleService.toJson(item);
       } else {
         // no article in local db
         debugPrint('getting remote story...');

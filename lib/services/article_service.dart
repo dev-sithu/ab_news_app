@@ -22,6 +22,21 @@ class ArticleService {
     };
   }
 
+  // Map table fields to json
+  static toJson(Article article) {
+    return {
+      'id': article.id,
+      'itemId': article.itemId,
+      'type': article.type,
+      'by': article.author,
+      'title': article.title,
+      'url': article.url,
+      'score': article.score,
+      'time': article.time,
+      'descendants': article.descendants,
+    };
+  }
+
   /// Insert a news article
   Future<Article> create(Map<String, dynamic> data) async {
     return await db.into(db.articles).insertReturning(ArticlesCompanion.insert(
