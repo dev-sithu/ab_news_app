@@ -3,7 +3,9 @@ import 'package:ab_news_app/pages/home.dart';
 import 'package:ab_news_app/pages/login.dart';
 import 'package:ab_news_app/pages/mypage.dart';
 import 'package:ab_news_app/pages/register.dart';
+import 'package:ab_news_app/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class NavigationTab extends StatefulWidget {
   const NavigationTab({super.key});
@@ -13,26 +15,16 @@ class NavigationTab extends StatefulWidget {
 }
 
 class _NavigationTabState extends State<NavigationTab> {
-  bool auth = false;
   int currentPageIndex = 0;
   List<Widget> pages = [];
 
   @override
   void initState() {
-    // TODO: auth to check if user is logged-in or not
-    if (auth) {
-      pages = [
-        const Home(),
-        const Favorites(),
-        const Mypage(),
-      ];
-    } else {
-      pages = [
-        const Home(),
-        const Favorites(),
-        Register({'login': goToLogin}),
-      ];
-    }
+    pages = [
+      const Home(),
+      const Favorites(),
+      Register({'login': goToLogin}),
+    ];
 
     super.initState();
   }
@@ -42,10 +34,7 @@ class _NavigationTabState extends State<NavigationTab> {
       pages = [
         const Home(),
         const Favorites(),
-        Login({
-          'register': goToRegister,
-          'mypage': goToMypage
-        }),
+        Login({'register': goToRegister}),
       ];
     });
   }
@@ -72,6 +61,17 @@ class _NavigationTabState extends State<NavigationTab> {
 
   @override
   Widget build(BuildContext context) {
+    final providerAuth = Provider.of<AuthProvider>(context);
+    if (providerAuth.isUserLoggedIn) {
+      setState(() {
+        pages = [
+          const Home(),
+          const Favorites(),
+          const Mypage(),
+        ];
+      });
+    }
+
     return Scaffold(
       bottomNavigationBar: NavigationBar(
         onDestinationSelected: (int index) {
@@ -93,7 +93,7 @@ class _NavigationTabState extends State<NavigationTab> {
           ),
           NavigationDestination(
             icon: const Icon(Icons.account_circle_outlined),
-            label: auth ? 'My page' : 'Register/Login',
+            label: providerAuth.isUserLoggedIn ? 'My page' : 'Register/Login',
           ),
         ],
       ),

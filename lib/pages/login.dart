@@ -1,7 +1,9 @@
 import 'package:ab_news_app/inject_container.dart';
+import 'package:ab_news_app/providers/auth_provider.dart';
 import 'package:ab_news_app/services/auth_service.dart';
 import 'package:ab_news_app/widgets/title_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class Login extends StatefulWidget {
   final Map<String, dynamic> navigation;
@@ -33,6 +35,8 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
+    final providerAuth = Provider.of<AuthProvider>(context);
+
     return Scaffold(
       appBar: titleBar(context, 'Sign In'),
       body: Padding(
@@ -86,7 +90,7 @@ class _LoginState extends State<Login> {
                   return;
                 }
 
-                widget.navigation['mypage']();
+                providerAuth.checkAuthentication(); // notify user have logged-in
               },
               child: const Text('Login'),
             ),
