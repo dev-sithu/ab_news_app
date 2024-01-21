@@ -1,6 +1,7 @@
 import 'package:ab_news_app/database/database.dart';
 import 'package:ab_news_app/services/article_service.dart';
 import 'package:ab_news_app/services/auth_service.dart';
+import 'package:ab_news_app/services/favorite_service.dart';
 import 'package:ab_news_app/services/news_api_service.dart';
 import 'package:ab_news_app/services/storage_service.dart';
 import 'package:ab_news_app/services/user_service.dart';
@@ -21,4 +22,5 @@ Future<void> initDependencies() async {
   getIt.registerSingleton<UserService>(UserService(getIt()));
   getIt.registerSingleton<AuthService>(AuthService(getIt(), getIt()));
   getIt.registerSingleton<ArticleService>(ArticleService(getIt()));
+  getIt.registerSingleton<FavoriteService>(FavoriteService(getIt()));
 }

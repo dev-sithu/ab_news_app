@@ -1,6 +1,10 @@
+import 'package:ab_news_app/inject_container.dart';
 import 'package:ab_news_app/models/article_model.dart';
+import 'package:ab_news_app/providers/auth_provider.dart';
+import 'package:ab_news_app/services/favorite_service.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ArticleWidget extends StatelessWidget {
@@ -10,6 +14,8 @@ class ArticleWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final providerAuth = Provider.of<AuthProvider>(context);
+
     return Container(
       padding: const EdgeInsetsDirectional.all(10.0),
       decoration: const BoxDecoration(
@@ -59,9 +65,13 @@ class ArticleWidget extends StatelessWidget {
                 ),
               ),
               ElevatedButton.icon(
-                onPressed: () => {
-                  // TODO: favorite logic (to db)
-                  print('Favorited!')
+                onPressed: () async {
+                  if (providerAuth.isUserLoggedIn) {
+                    await getIt<FavoriteService>().create(providerAuth.user['id'], article.id);
+                    debugPrint('Saved!');
+                  } else {
+                    debugPrint('You need to login first!');
+                  }
                 },
                 icon: const Icon(Icons.favorite_border),
                 label: const Text('Favorite'),
