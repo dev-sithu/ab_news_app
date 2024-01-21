@@ -1,7 +1,6 @@
 import 'package:ab_news_app/config/app_theme.dart';
 import 'package:ab_news_app/inject_container.dart';
 import 'package:ab_news_app/providers/auth_provider.dart';
-import 'package:ab_news_app/services/auth_service.dart';
 import 'package:ab_news_app/widgets/navigation_tab.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -9,14 +8,6 @@ import 'package:provider/provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initDependencies();
-
-  // Testing user authentication
-  // final auth = await getIt<AuthService>().authenticated();
-  // debugPrint(auth ? 'logged-in' : 'anonymous');
-  // if (auth) {
-  //   final userData = await getIt<AuthService>().getUser();
-  //   debugPrint(userData.toString());
-  // }
 
   runApp(const MyApp());
 }
