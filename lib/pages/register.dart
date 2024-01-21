@@ -4,8 +4,8 @@ import 'package:ab_news_app/widgets/title_bar.dart';
 import 'package:flutter/material.dart';
 
 class Register extends StatefulWidget {
-  final dynamic goToLogin;
-  const Register(this.goToLogin, {super.key});
+  final Map<String, dynamic> navigation;
+  const Register(this.navigation, {super.key});
 
   @override
   State<Register> createState() => _RegisterState();
@@ -110,7 +110,7 @@ class _RegisterState extends State<Register> {
             ),
             const SizedBox(height: 10),
             TextButton(
-              onPressed: widget.goToLogin,
+              onPressed: widget.navigation['login'],
               child: const Text('Already have an account? login here')
             )
           ],

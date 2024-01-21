@@ -1,14 +1,11 @@
-import 'package:ab_news_app/database/database.dart';
 import 'package:ab_news_app/inject_container.dart';
 import 'package:ab_news_app/services/auth_service.dart';
-import 'package:ab_news_app/services/user_service.dart';
 import 'package:ab_news_app/widgets/title_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:password_dart/password_dart.dart';
 
 class Login extends StatefulWidget {
-  final dynamic goToRegister;
-  const Login(this.goToRegister, {super.key});
+  final Map<String, dynamic> navigation;
+  const Login(this.navigation, {super.key});
 
   @override
   State<Login> createState() => _LoginState();
@@ -89,14 +86,13 @@ class _LoginState extends State<Login> {
                   return;
                 }
 
-                // TODO: redirect or something
-                debugPrint('redirect or something to do');
+                widget.navigation['mypage']();
               },
               child: const Text('Login'),
             ),
             const SizedBox(height: 10),
             TextButton(
-              onPressed: widget.goToRegister,
+              onPressed: widget.navigation['register'],
               child: const Text('Not registered yet? sign up here')
             )
           ],

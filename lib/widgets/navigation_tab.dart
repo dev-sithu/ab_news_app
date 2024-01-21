@@ -1,6 +1,7 @@
 import 'package:ab_news_app/pages/favorites.dart';
 import 'package:ab_news_app/pages/home.dart';
 import 'package:ab_news_app/pages/login.dart';
+import 'package:ab_news_app/pages/mypage.dart';
 import 'package:ab_news_app/pages/register.dart';
 import 'package:flutter/material.dart';
 
@@ -12,16 +13,26 @@ class NavigationTab extends StatefulWidget {
 }
 
 class _NavigationTabState extends State<NavigationTab> {
+  bool auth = false;
   int currentPageIndex = 0;
   List<Widget> pages = [];
 
   @override
   void initState() {
-    pages = [
-      const Home(),
-      const Favorites(),
-      Register(goToLogin),
-    ];
+    // TODO: auth to check if user is logged-in or not
+    if (auth) {
+      pages = [
+        const Home(),
+        const Favorites(),
+        const Mypage(),
+      ];
+    } else {
+      pages = [
+        const Home(),
+        const Favorites(),
+        Register({'login': goToLogin}),
+      ];
+    }
 
     super.initState();
   }
@@ -31,7 +42,10 @@ class _NavigationTabState extends State<NavigationTab> {
       pages = [
         const Home(),
         const Favorites(),
-        Login(goToRegister),
+        Login({
+          'register': goToRegister,
+          'mypage': goToMypage
+        }),
       ];
     });
   }
@@ -41,7 +55,17 @@ class _NavigationTabState extends State<NavigationTab> {
       pages = [
         const Home(),
         const Favorites(),
-        Register(goToLogin),
+        Register({'login': goToLogin}),
+      ];
+    });
+  }
+
+  void goToMypage() {
+     setState(() {
+      pages = [
+        const Home(),
+        const Favorites(),
+        const Mypage(),
       ];
     });
   }
@@ -57,19 +81,19 @@ class _NavigationTabState extends State<NavigationTab> {
         },
         indicatorColor: Colors.amber,
         selectedIndex: currentPageIndex,
-        destinations: const <Widget>[
-          NavigationDestination(
+        destinations: <Widget>[
+          const NavigationDestination(
             selectedIcon: Icon(Icons.home),
             icon: Icon(Icons.home_outlined),
             label: 'Home',
           ),
-          NavigationDestination(
+          const NavigationDestination(
             icon: Icon(Icons.favorite),
             label: 'Favorites',
           ),
           NavigationDestination(
-            icon: Icon(Icons.account_circle_outlined),
-            label: 'Register/Login',
+            icon: const Icon(Icons.account_circle_outlined),
+            label: auth ? 'My page' : 'Register/Login',
           ),
         ],
       ),

@@ -53,14 +53,20 @@ class ArticleService {
 
   /// Find a news article by id
   Future<Article?> find(int id) async {
-    return await (db.select(db.articles)..where((t) => t.id.equals(id)))
-      .getSingleOrNull();
+    final query = db.select(db.articles)
+      ..where((t) => t.id.equals(id))
+      ..limit(1);
+
+    return query.getSingleOrNull();
   }
 
   /// Find a news article by item_id
   Future<Article?> findByItem(int itemId) async {
-    return await (db.select(db.articles)..where((t) => t.itemId.equals(itemId)))
-      .getSingleOrNull();
+    final query = db.select(db.articles)
+      ..where((t) => t.itemId.equals(itemId))
+      ..limit(1);
+
+    return query.getSingleOrNull();
   }
 
    /// Get all news article
