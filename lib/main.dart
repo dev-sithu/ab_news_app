@@ -22,7 +22,11 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => AuthProvider()),
-        ChangeNotifierProvider(create: (context) => FavoriteProvider())
+        ChangeNotifierProvider(create: (context) => FavoriteProvider(null)),
+        ChangeNotifierProxyProvider<AuthProvider, FavoriteProvider>(
+          update: (context, auth, fav) => FavoriteProvider(auth),
+          create: (BuildContext context) => FavoriteProvider(null),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

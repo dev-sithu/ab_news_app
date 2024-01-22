@@ -40,8 +40,14 @@ class FavoriteService {
   }
 
   /// Get all favorites by user id
-  Future<List<Favorite>> findByUser(int userId) async {
-    return await (db.select(db.favorites)..where((t) => t.userId.equals(userId))).get();
+  Future<List<Article>> findByUser(int userId) async {
+    final query = db.favorites.select()
+      .join([
+        innerJoin(db.articles, db.articles.id.equalsExp(db.favorites.newsId))
+      ])
+      ..where(db.favorites.userId.equals(userId));
+
+    return query.map((row) => row.readTable(db.articles)).get();
   }
 
   /// Add/Remove into/from favorites
