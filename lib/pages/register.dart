@@ -103,6 +103,13 @@ class _RegisterState extends State<Register> {
                   return;
                 }
 
+                final existingUser = await getIt<UserService>().findByUsername(username);
+                if (existingUser != null) {
+                  if (!context.mounted) return;
+                  showSnackBar(context, 'The username is already in use. Try another one.');
+                  return;
+                }
+
                 // Register user
                 var user = await getIt<UserService>().create(username, password);
                 debugPrint(user.toString());
