@@ -3,6 +3,7 @@ import 'package:ab_news_app/inject_container.dart';
 import 'package:ab_news_app/providers/auth_provider.dart';
 import 'package:ab_news_app/providers/favorite_provider.dart';
 import 'package:ab_news_app/services/favorite_service.dart';
+import 'package:ab_news_app/utils/toasts.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -75,13 +76,17 @@ class ArticleWidget extends StatelessWidget {
               ),
               ElevatedButton.icon(
                 onPressed: () async {
+                  String msg = '';
                   if (providerAuth.isUserLoggedIn) {
                     final userId = providerAuth.user['id'];
 
-                    getIt<FavoriteService>().toggleFavorite(userId, article.id); // toggle in db
+                    msg = await getIt<FavoriteService>().toggleFavorite(userId, article.id); // toggle in db
                     providerFavorite.toggleFavorite(article); // toggle in state
+
+                    if (!context.mounted) return;
+                    showSnackBar(context, msg);
                   } else {
-                    debugPrint('You need to login first!');
+                    showSnackBar(context, 'You need to login first!');
                   }
                 },
                 icon: Icon(icon),

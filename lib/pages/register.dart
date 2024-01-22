@@ -1,5 +1,6 @@
 import 'package:ab_news_app/inject_container.dart';
 import 'package:ab_news_app/services/user_service.dart';
+import 'package:ab_news_app/utils/toasts.dart';
 import 'package:ab_news_app/widgets/title_bar.dart';
 import 'package:flutter/material.dart';
 
@@ -83,28 +84,31 @@ class _RegisterState extends State<Register> {
 
                 // Validation
                 if (username.isEmpty) {
-                  debugPrint('Username is required.');
+                  showSnackBar(context, 'Username is required.');
                   return;
                 }
 
                 if (password.isEmpty) {
-                  debugPrint('Password is required.');
+                  showSnackBar(context, 'Password is required.');
                   return;
                 }
 
                 if (rePassword.isEmpty) {
-                  debugPrint('Re-type the password.');
+                  showSnackBar(context, 'Re-type the password.');
                   return;
                 }
 
                 if (password != rePassword) {
-                  debugPrint('Password does not match.');
+                  showSnackBar(context, 'Password does not match.');
                   return;
                 }
 
                 // Register user
                 var user = await getIt<UserService>().create(username, password);
                 debugPrint(user.toString());
+
+                if (!context.mounted) return;
+                showSnackBar(context, 'User registration is successful.');
               },
               child: const Text('Register'),
             ),

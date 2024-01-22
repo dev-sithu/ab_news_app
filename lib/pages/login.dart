@@ -1,6 +1,7 @@
 import 'package:ab_news_app/inject_container.dart';
 import 'package:ab_news_app/providers/auth_provider.dart';
 import 'package:ab_news_app/services/auth_service.dart';
+import 'package:ab_news_app/utils/toasts.dart';
 import 'package:ab_news_app/widgets/title_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -75,18 +76,19 @@ class _LoginState extends State<Login> {
 
                 // Validation
                 if (username.isEmpty) {
-                  debugPrint('Username is required.');
+                  showSnackBar(context, 'Username is required.');
                   return;
                 }
 
                 if (password.isEmpty) {
-                  debugPrint('Password is required.');
+                  showSnackBar(context, 'Password is required.');
                   return;
                 }
 
                 final result = await getIt<AuthService>().login(username, password);
                 if (result is String) {
-                  debugPrint(result);
+                  if (!context.mounted) return;
+                  showSnackBar(context, result);
                   return;
                 }
 
