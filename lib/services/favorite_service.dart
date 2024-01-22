@@ -1,4 +1,6 @@
 import 'package:ab_news_app/database/database.dart';
+import 'package:drift/drift.dart';
+import 'package:flutter/material.dart';
 
 class FavoriteService {
   final AppDatabase db;
@@ -7,15 +9,15 @@ class FavoriteService {
 
   // Insert a favorite (if not exists)
   Future<Favorite> create(int userId, int newsId) async {
-    final favorite = await checkExists(userId, newsId);
-    if (favorite != null) {
-      return favorite;
-    }
-
     return await db.into(db.favorites).insertReturning(FavoritesCompanion.insert(
       userId: userId,
       newsId: newsId,
     ));
+  }
+
+  // Delete a favorite
+  Future<void> remove(Favorite fav) async {
+    await db.favorites.deleteOne(fav);
   }
 
   /// Find a favorite by user_id and news_id
@@ -40,5 +42,21 @@ class FavoriteService {
   /// Get all favorites by user id
   Future<List<Favorite>> findByUser(int userId) async {
     return await (db.select(db.favorites)..where((t) => t.userId.equals(userId))).get();
+  }
+
+  /// Add/Remove into/from favorites
+  Future<Favorite> toggleFavorite(int userId, int newsId) async {
+    Favorite? fav = await checkExists(userId, newsId);
+    if (fav == null) {
+      // if not exist, insert into favorites
+      fav = await create(userId, newsId);
+      debugPrint('Saved into favorites.');
+    } else {
+      // if exists, remove from favorites
+      await remove(fav);
+      debugPrint('Removed from favorites.');
+    }
+
+    return fav;
   }
 }

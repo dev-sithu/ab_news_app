@@ -1,6 +1,7 @@
+import 'package:ab_news_app/database/database.dart';
 import 'package:ab_news_app/inject_container.dart';
-import 'package:ab_news_app/models/article_model.dart';
 import 'package:ab_news_app/providers/auth_provider.dart';
+import 'package:ab_news_app/providers/favorite_provider.dart';
 import 'package:ab_news_app/services/favorite_service.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -8,13 +9,21 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ArticleWidget extends StatelessWidget {
-  final ArticleModel article;
+  final Article article;
 
   const ArticleWidget({super.key, required this.article});
 
   @override
   Widget build(BuildContext context) {
     final providerAuth = Provider.of<AuthProvider>(context);
+    final providerFavorite = Provider.of<FavoriteProvider>(context);
+
+    IconData icon;
+    if (providerFavorite.favorites.contains(article)) {
+      icon = Icons.favorite;
+    } else {
+      icon = Icons.favorite_border;
+    }
 
     return Container(
       padding: const EdgeInsetsDirectional.all(10.0),
@@ -67,13 +76,15 @@ class ArticleWidget extends StatelessWidget {
               ElevatedButton.icon(
                 onPressed: () async {
                   if (providerAuth.isUserLoggedIn) {
-                    await getIt<FavoriteService>().create(providerAuth.user['id'], article.id);
-                    debugPrint('Saved!');
+                    final userId = providerAuth.user['id'];
+
+                    getIt<FavoriteService>().toggleFavorite(userId, article.id); // toggle in db
+                    providerFavorite.toggleFavorite(article); // toggle in state
                   } else {
                     debugPrint('You need to login first!');
                   }
                 },
-                icon: const Icon(Icons.favorite_border),
+                icon: Icon(icon),
                 label: const Text('Favorite'),
               )
             ],
