@@ -93,6 +93,9 @@ class _LoginState extends State<Login> {
                 }
 
                 providerAuth.checkAuthentication(); // notify user have logged-in
+
+                if (!context.mounted) return;
+                showSnackBar(context, 'Login successful.');
               },
               child: const Text('Login'),
             ),

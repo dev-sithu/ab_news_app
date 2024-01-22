@@ -25,19 +25,22 @@ class AuthService {
       return 'Password does not match.';
     }
 
-    // Store user data in secure storage (alike Session)
+    await authenticate(user);
+
+    return user;
+  }
+
+  /// Store user data in secure storage (alike Session)
+  Future<void> authenticate(User user) async {
     var data = user.toJson();
     data['timestamp'] = DateTime.now().millisecondsSinceEpoch;
     data.remove('password');
 
     await storage.add('auth', json.encode(data));
-
-    debugPrint('Login successful.');
-    return user;
   }
 
   /// Check if user already logged-in or not
-  Future<bool> authenticated() async {
+  Future<bool> ifAuthenticated() async {
     final auth = await storage.read('auth');
 
     return auth != null;

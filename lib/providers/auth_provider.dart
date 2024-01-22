@@ -13,7 +13,7 @@ class AuthProvider extends ChangeNotifier {
 
   /// Check & change user state
   void checkAuthentication() async {
-    _isUserLoggedIn = await getIt<AuthService>().authenticated();
+    _isUserLoggedIn = await getIt<AuthService>().ifAuthenticated();
     if (_isUserLoggedIn) {
       _user = await getIt<AuthService>().getUser();
     }

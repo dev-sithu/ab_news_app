@@ -1,8 +1,12 @@
+import 'package:ab_news_app/database/database.dart';
 import 'package:ab_news_app/inject_container.dart';
+import 'package:ab_news_app/providers/auth_provider.dart';
+import 'package:ab_news_app/services/auth_service.dart';
 import 'package:ab_news_app/services/user_service.dart';
 import 'package:ab_news_app/utils/toasts.dart';
 import 'package:ab_news_app/widgets/title_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class Register extends StatefulWidget {
   final Map<String, dynamic> navigation;
@@ -36,6 +40,8 @@ class _RegisterState extends State<Register> {
 
   @override
   Widget build(BuildContext context) {
+    final providerAuth = Provider.of<AuthProvider>(context);
+
     return Scaffold(
       appBar: titleBar(context, 'Sign Up'),
       body: Padding(
@@ -111,8 +117,13 @@ class _RegisterState extends State<Register> {
                 }
 
                 // Register user
-                var user = await getIt<UserService>().create(username, password);
+                User user = await getIt<UserService>().create(username, password);
                 debugPrint(user.toString());
+
+                // Login
+                await getIt<AuthService>().authenticate(user);
+                // notify user have logged-in
+                providerAuth.checkAuthentication();
 
                 if (!context.mounted) return;
                 showSnackBar(context, 'User registration is successful.');
