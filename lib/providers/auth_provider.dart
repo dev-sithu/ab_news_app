@@ -1,10 +1,11 @@
 import 'package:ab_news_app/inject_container.dart';
-import 'package:ab_news_app/services/auth_service.dart';
+import 'package:ab_news_app/services/auth/auth_service.dart';
+import 'package:ab_news_app/services/auth/auth_user.dart';
 import 'package:flutter/material.dart';
 
 class AuthProvider extends ChangeNotifier {
   bool _isUserLoggedIn = false;
-  dynamic _user;
+  late AuthUser _user;
 
   /// Constructor
   AuthProvider() {
@@ -25,5 +26,5 @@ class AuthProvider extends ChangeNotifier {
   bool get isUserLoggedIn => _isUserLoggedIn;
 
   /// Getter for _user
-  dynamic get user => _user;
+  AuthUser get user => _user;
 }

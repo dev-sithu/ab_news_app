@@ -17,7 +17,7 @@ class FavoriteProvider extends ChangeNotifier {
 
   /// Load favorite articles from db into state
   void loadFavorites() async {
-    favorites = await getIt<FavoriteService>().findByUser(_authProvider?.user['id']);
+    favorites = await getIt<FavoriteService>().findByUser(_authProvider!.user.id);
   }
 
   /// Add to/Remove from favorites tate

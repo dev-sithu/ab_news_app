@@ -78,7 +78,7 @@ class ArticleWidget extends StatelessWidget {
                 onPressed: () async {
                   String msg = '';
                   if (providerAuth.isUserLoggedIn) {
-                    final userId = providerAuth.user['id'];
+                    final userId = providerAuth.user.id;
 
                     msg = await getIt<FavoriteService>().toggleFavorite(userId, article.id); // toggle in db
                     providerFavorite.toggleFavorite(article); // toggle in state

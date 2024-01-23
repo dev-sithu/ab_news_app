@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:ab_news_app/database/database.dart';
 import 'package:ab_news_app/inject_container.dart';
+import 'package:ab_news_app/services/auth/auth_user.dart';
 import 'package:ab_news_app/services/storage_service.dart';
 import 'package:ab_news_app/services/user_service.dart';
 import 'package:flutter/material.dart';
@@ -32,9 +33,7 @@ class AuthService {
 
   /// Store user data in secure storage (alike Session)
   Future<void> authenticate(User user) async {
-    var data = user.toJson();
-    data['timestamp'] = DateTime.now().millisecondsSinceEpoch;
-    data.remove('password');
+    final data = AuthUser.toJson(user);
 
     await storage.add('auth', json.encode(data));
   }
@@ -47,12 +46,12 @@ class AuthService {
   }
 
   /// Get user data from secure storage
-  Future<Map<String, dynamic>?> getUser() async {
+  Future<AuthUser> getUser() async {
     final auth = await storage.read('auth');
     if (auth != null) {
-       return json.decode(auth);
+       return AuthUser.fromJson(json.decode(auth));
     }
 
-    return null;
+    return AuthUser.getSkeleton();
   }
 }

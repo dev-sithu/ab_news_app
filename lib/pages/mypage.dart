@@ -9,7 +9,7 @@ class Mypage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final providerAuth = Provider.of<AuthProvider>(context);
-    final username = providerAuth.user['username'];
+    final username = providerAuth.user.username;
 
     return Scaffold(
       appBar: titleBar(context, 'My Page'),
