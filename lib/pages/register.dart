@@ -4,6 +4,7 @@ import 'package:ab_news_app/providers/auth_provider.dart';
 import 'package:ab_news_app/providers/nav_provider.dart';
 import 'package:ab_news_app/services/auth/auth_service.dart';
 import 'package:ab_news_app/services/user_service.dart';
+import 'package:ab_news_app/utils/button_style.dart';
 import 'package:ab_news_app/utils/toasts.dart';
 import 'package:ab_news_app/widgets/title_bar.dart';
 import 'package:flutter/material.dart';
@@ -78,12 +79,7 @@ class _RegisterState extends State<Register> {
             ),
             const SizedBox(height: 10),
             TextButton(
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.white,
-                backgroundColor: Colors.blueAccent,
-                padding: const EdgeInsets.all(20.0),
-                textStyle: const TextStyle(fontSize: 20),
-              ),
+              style: getPrimaryButtonStyle(),
               onPressed: () async {
                 final username    = _username.text;
                 final password    = _password.text;
