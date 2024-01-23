@@ -31,6 +31,11 @@ class AuthService {
     return user;
   }
 
+  /// Remove local storage for user session
+  Future<void> logout() async {
+    await storage.remove('auth');
+  }
+
   /// Store user data in secure storage (alike Session)
   Future<void> authenticate(User user) async {
     final data = AuthUser.toJson(user);
