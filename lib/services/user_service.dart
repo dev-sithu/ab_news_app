@@ -1,5 +1,5 @@
 import 'package:ab_news_app/database/database.dart';
-import 'package:password_dart/password_dart.dart';
+import 'package:dbcrypt/dbcrypt.dart';
 
 class UserService {
   final AppDatabase db;
@@ -8,7 +8,7 @@ class UserService {
 
   /// Insert a user
   Future<User> create(String username, String password) async {
-    final pwd = Password.hash(password, PBKDF2());
+    final pwd = DBCrypt().hashpw(password, DBCrypt().gensalt());
 
     return await db.into(db.users).insertReturning(UsersCompanion.insert(
       username: username,

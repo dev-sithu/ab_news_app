@@ -29,7 +29,7 @@ In VS Code, press **F5** to run the app with web platform option.
 - Open an external URL with a new tab: `url_launcher`
 - Database: `drift`, `sqlite3`, `sqlite3_flutter_libs`, `path`, `path_provider`, `drift_dev`, `build_runner`
 - Dependency injection: `get_it`
-- Password hashing: `password_dart` (Drawback of hashing too long)
+- Password hashing: `dbcrypt` (hashing is a bit slower in debug mode rather than release mode)
 - Secure local storage: `flutter_secure_storage` (for user session)
 - State management: `provider`
 - Alert message: `toastification` (currently not using it because of AnimationController dispose more than once error; SnackBar is used instead)
@@ -39,7 +39,7 @@ In VS Code, press **F5** to run the app with web platform option.
 
 - ~~User logout~~
 - Add full name entry to user registration (users.fullname in db)
-- Faster password hashing in register/login form submit
+- ~~Faster password hashing in register/login form submit~~
 - Better form validation
 - Better error handling
 - Prevent API recall on tab switch (add swipe down event to update data or add a refresh button)

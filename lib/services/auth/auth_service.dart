@@ -5,8 +5,8 @@ import 'package:ab_news_app/inject_container.dart';
 import 'package:ab_news_app/services/auth/auth_user.dart';
 import 'package:ab_news_app/services/storage_service.dart';
 import 'package:ab_news_app/services/user_service.dart';
+import 'package:dbcrypt/dbcrypt.dart';
 import 'package:flutter/material.dart';
-import 'package:password_dart/password_dart.dart';
 
 class AuthService {
   final UserService userService;
@@ -22,7 +22,7 @@ class AuthService {
     }
 
     debugPrint('Verifying password...');
-    if (!Password.verify(password, user.password)) {
+    if (!DBCrypt().checkpw(password, user.password)) {
       return 'Password does not match.';
     }
 
