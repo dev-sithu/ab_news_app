@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 class NavProvider extends ChangeNotifier {
   final AuthProvider ? _authProvider;
   List<Widget> _pages = [];
+  int _currentIndex = 0;
 
   NavProvider(this._authProvider) {
     if (_authProvider != null && _authProvider.isUserLoggedIn) {
@@ -48,6 +49,18 @@ class NavProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Get the current active page
+  Widget getActivePage() => _pages[_currentIndex];
+
   /// Getter for _pages
   List<Widget> get pages => _pages;
+
+  /// Getter for _currentPageIndex
+  int get currentIndex => _currentIndex;
+
+  /// Setter for _currentPageIndex
+  set currentIndex(index) {
+    _currentIndex = index;
+    notifyListeners();
+  }
 }

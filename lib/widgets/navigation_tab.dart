@@ -3,15 +3,8 @@ import 'package:ab_news_app/providers/nav_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class NavigationTab extends StatefulWidget {
+class NavigationTab extends StatelessWidget {
   const NavigationTab({super.key});
-
-  @override
-  State<NavigationTab> createState() => _NavigationTabState();
-}
-
-class _NavigationTabState extends State<NavigationTab> {
-  int currentPageIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -21,12 +14,10 @@ class _NavigationTabState extends State<NavigationTab> {
     return Scaffold(
       bottomNavigationBar: NavigationBar(
         onDestinationSelected: (int index) {
-          setState(() {
-            currentPageIndex = index;
-          });
+          providerNav.currentIndex = index; // Change tab
         },
         indicatorColor: Colors.amber,
-        selectedIndex: currentPageIndex,
+        selectedIndex: providerNav.currentIndex,
         destinations: <Widget>[
           const NavigationDestination(
             selectedIcon: Icon(Icons.home),
@@ -43,7 +34,7 @@ class _NavigationTabState extends State<NavigationTab> {
           ),
         ],
       ),
-      body: providerNav.pages[currentPageIndex],
+      body: providerNav.getActivePage(),
     );
   }
 }

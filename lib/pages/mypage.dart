@@ -38,7 +38,7 @@ class Mypage extends StatelessWidget {
               onPressed: () async {
                 await getIt<AuthService>().logout();
                 providerAuth.checkAuthentication();  // notify user have signed out
-                providerNav.loginNav(); // Display the login form
+                providerNav.currentIndex = 0; // Change the default tab
 
                 if (!context.mounted) return;
                 showSnackBar(context, 'Logout successful.');

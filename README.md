@@ -37,7 +37,7 @@ In VS Code, press **F5** to run the app with web platform option.
 
 ## Improvements
 
-- User logout
+- ~~User logout~~
 - Add full name entry to user registration (users.fullname in db)
 - Faster password hashing in register/login form submit
 - Better form validation
