@@ -2,6 +2,7 @@ import 'package:ab_news_app/config/app_theme.dart';
 import 'package:ab_news_app/inject_container.dart';
 import 'package:ab_news_app/providers/auth_provider.dart';
 import 'package:ab_news_app/providers/favorite_provider.dart';
+import 'package:ab_news_app/providers/nav_provider.dart';
 import 'package:ab_news_app/widgets/navigation_tab.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -22,10 +23,13 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => AuthProvider()),
-        ChangeNotifierProvider(create: (context) => FavoriteProvider(null)),
         ChangeNotifierProxyProvider<AuthProvider, FavoriteProvider>(
           update: (context, auth, fav) => FavoriteProvider(auth),
           create: (BuildContext context) => FavoriteProvider(null),
+        ),
+        ChangeNotifierProxyProvider<AuthProvider, NavProvider>(
+          update: (context, auth, nav) => NavProvider(auth),
+          create: (BuildContext context) => NavProvider(null),
         ),
       ],
       child: MaterialApp(

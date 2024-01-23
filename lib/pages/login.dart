@@ -1,5 +1,6 @@
 import 'package:ab_news_app/inject_container.dart';
 import 'package:ab_news_app/providers/auth_provider.dart';
+import 'package:ab_news_app/providers/nav_provider.dart';
 import 'package:ab_news_app/services/auth_service.dart';
 import 'package:ab_news_app/utils/toasts.dart';
 import 'package:ab_news_app/widgets/title_bar.dart';
@@ -7,8 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class Login extends StatefulWidget {
-  final Map<String, dynamic> navigation;
-  const Login(this.navigation, {super.key});
+  const Login({super.key});
 
   @override
   State<Login> createState() => _LoginState();
@@ -37,6 +37,7 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     final providerAuth = Provider.of<AuthProvider>(context);
+    final providerNav = Provider.of<NavProvider>(context);
 
     return Scaffold(
       appBar: titleBar(context, 'Sign In'),
@@ -101,7 +102,7 @@ class _LoginState extends State<Login> {
             ),
             const SizedBox(height: 10),
             TextButton(
-              onPressed: widget.navigation['register'],
+              onPressed: () => providerNav.registerNav(),
               child: const Text('Not registered yet? sign up here')
             )
           ],
