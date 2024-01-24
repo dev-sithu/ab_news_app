@@ -18,6 +18,11 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   late final TextEditingController _username;
   late final TextEditingController _password;
+  // Create a global key that uniquely identifies the Form widget
+  // and allows validation of the form.
+  final _formKey = GlobalKey<FormState>();
+  String? userError; // User error message in state
+  String? pwdError; // Passwor error message in state
 
   @override
   void initState() {
@@ -35,6 +40,25 @@ class _LoginState extends State<Login> {
     super.dispose();
   }
 
+  /// Async process to check user validation with db
+  Future<int> checkUserExist()  async {
+    setState(() {
+      // clear any existing errors
+      userError = null;
+      pwdError = null;
+    });
+
+    final result = await getIt<AuthService>().validateUser(_username.text, _password.text);
+    if (result > 0) {
+      setState(() {
+        if (result == 1) userError = AuthService.getError(result);
+        if (result == 2) pwdError = AuthService.getError(result);
+      });
+    }
+
+    return result;
+  }
+
   @override
   Widget build(BuildContext context) {
     final providerAuth = Provider.of<AuthProvider>(context);
@@ -42,66 +66,73 @@ class _LoginState extends State<Login> {
 
     return Scaffold(
       appBar: titleBar(context, 'Sign In'),
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          children: [
-            TextField(
-              controller: _username,
-              enableSuggestions: false,
-              autocorrect: false,
-              autofocus: true,
-              decoration: const InputDecoration(
-                hintText: 'Enter your login username here',
+      body: Form(
+        key: _formKey,
+        autovalidateMode: AutovalidateMode.disabled,
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            children: [
+              TextFormField(
+                controller: _username,
+                enableSuggestions: false,
+                autocorrect: false,
+                autofocus: true,
+                decoration: InputDecoration(
+                  hintText: 'Enter your login username here',
+                  errorText: userError, // This would be updated by checkUserExist()
+                ),
+                validator: (value) { // The validator receives the text that the user has entered.
+                  return value == null || value.isEmpty ? 'Username is required.' : null;
+                },
               ),
-            ),
-            TextField(
-              controller: _password,
-              obscureText: true,
-              enableSuggestions: false,
-              autocorrect: false,
-              decoration: const InputDecoration(
-                hintText: 'Enter your password here',
+              TextFormField(
+                controller: _password,
+                obscureText: true,
+                enableSuggestions: false,
+                autocorrect: false,
+                decoration: InputDecoration(
+                  hintText: 'Enter your password here',
+                  errorText: pwdError, // This would be updated by checkUserExist()
+                ),
+                validator: (value) { // The validator receives the text that the user has entered.
+                  return value == null || value.isEmpty ? 'Password is required.' : null;
+                },
               ),
-            ),
-            const SizedBox(height: 10),
-            TextButton(
-              style: getPrimaryButtonStyle(),
-              onPressed: () async {
-                final username = _username.text;
-                final password = _password.text;
+              const SizedBox(height: 10),
+              TextButton(
+                style: getPrimaryButtonStyle(),
+                onPressed: () async {
+                  // Validate returns true if the form is valid, or false otherwise.
+                  if (!_formKey.currentState!.validate()) {
+                    return;
+                  }
 
-                // Validation
-                if (username.isEmpty) {
-                  showSnackBar(context, 'Username is required.');
-                  return;
-                }
+                  int result = await checkUserExist();
 
-                if (password.isEmpty) {
-                  showSnackBar(context, 'Password is required.');
-                  return;
-                }
+                  if (AuthService.getError(result) == null) { // if no error
+                    final user = await getIt<AuthService>().login(_username.text, _password.text);
+                    String msg = '';
+                    if (user != null) {
+                      providerAuth.checkAuthentication(); // notify user have logged-in
+                      msg = 'Login successful.';
+                    } else {
+                      msg = 'Login failed.';
+                    }
 
-                final result = await getIt<AuthService>().login(username, password);
-                if (result is String) {
-                  if (!context.mounted) return;
-                  showSnackBar(context, result);
-                  return;
-                }
-
-                providerAuth.checkAuthentication(); // notify user have logged-in
-
-                if (!context.mounted) return;
-                showSnackBar(context, 'Login successful.');
-              },
-              child: const Text('Login'),
-            ),
-            const SizedBox(height: 10),
-            TextButton(
-              onPressed: () => providerNav.registerNav(),
-              child: const Text('Not registered yet? sign up here')
-            )
-          ],
+                    if (!context.mounted) return;
+                    showSnackBar(context, msg);
+                  }
+                },
+                child: const Text('Login'),
+              ),
+              const SizedBox(height: 10),
+              TextButton(
+                onPressed: () => providerNav.registerNav(),
+                child: const Text('Not registered yet? sign up here')
+              )
+            ],
+          ),
         ),
       ),
     );

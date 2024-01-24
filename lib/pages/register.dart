@@ -1,4 +1,5 @@
 import 'package:ab_news_app/database/database.dart';
+import 'package:ab_news_app/extensions/string_validation.dart';
 import 'package:ab_news_app/inject_container.dart';
 import 'package:ab_news_app/providers/auth_provider.dart';
 import 'package:ab_news_app/providers/nav_provider.dart';
@@ -21,6 +22,10 @@ class _RegisterState extends State<Register> {
   late final TextEditingController _username;
   late final TextEditingController _password;
   late final TextEditingController _rePassword;
+  // Create a global key that uniquely identifies the Form widget
+  // and allows validation of the form.
+  final _formKey = GlobalKey<FormState>();
+  String? userError; // User error message in state
 
   @override
   void initState() {
@@ -39,6 +44,25 @@ class _RegisterState extends State<Register> {
     super.dispose();
   }
 
+  /// Async process to check if username exists in db
+  Future<bool> checkUsernameExist()  async {
+    setState(() {
+      // clear any existing errors
+      userError = null;
+    });
+
+    bool result = false;
+    final user = await getIt<UserService>().findByUsername(_username.text);
+    if (user != null) {
+      result = true;
+      setState(() {
+        userError = 'The username is already in use. Try another one.';
+      });
+    }
+
+    return result;
+  }
+
   @override
   Widget build(BuildContext context) {
     final providerAuth = Provider.of<AuthProvider>(context);
@@ -46,93 +70,106 @@ class _RegisterState extends State<Register> {
 
     return Scaffold(
       appBar: titleBar(context, 'Sign Up'),
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          children: [
-            TextField(
-              controller: _username,
-              enableSuggestions: false,
-              autocorrect: false,
-              autofocus: true,
-              decoration: const InputDecoration(
-                hintText: 'Enter your login username here',
+      body: Form(
+        key: _formKey,
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            children: [
+              TextFormField(
+                controller: _username,
+                enableSuggestions: false,
+                autocorrect: false,
+                autofocus: true,
+                decoration: InputDecoration(
+                  hintText: 'Enter your login username here',
+                  errorText: userError, // This would be updated by checkUsernameExist()
+                ),
+                validator: (value) { // The validator receives the text that the user has entered.
+                  if (value == null || value.isEmpty) {
+                    return 'Username is required.';
+                  }
+
+                  if (!value.isValidUsername) {
+                    return 'Username can only contains letters, digits, periods, hypens and underscores.';
+                  }
+
+                  return null;
+                },
               ),
-            ),
-            TextField(
-              controller: _password,
-              obscureText: true,
-              enableSuggestions: false,
-              autocorrect: false,
-              decoration: const InputDecoration(
-                hintText: 'Enter your password here',
+              TextFormField(
+                controller: _password,
+                obscureText: true,
+                enableSuggestions: false,
+                autocorrect: false,
+                decoration: const InputDecoration(
+                  hintText: 'Enter your password here',
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Password is required.';
+                  }
+
+                  if (value.length < 6) {
+                      return 'Your password is too short';
+                  }
+
+                  return null;
+                },
               ),
-            ),
-            TextField(
-              controller: _rePassword,
-              obscureText: true,
-              enableSuggestions: false,
-              autocorrect: false,
-              decoration: const InputDecoration(
-                hintText: 'Re-type the password here',
+              TextFormField(
+                controller: _rePassword,
+                obscureText: true,
+                enableSuggestions: false,
+                autocorrect: false,
+                decoration: const InputDecoration(
+                  hintText: 'Re-type the password here',
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Re-type the password.';
+                  }
+
+                  if (value != _password.text) {
+                    return 'Password does not match.';
+                  }
+
+                  return null;
+                },
               ),
-            ),
-            const SizedBox(height: 10),
-            TextButton(
-              style: getPrimaryButtonStyle(),
-              onPressed: () async {
-                final username    = _username.text;
-                final password    = _password.text;
-                final rePassword  = _rePassword.text;
+              const SizedBox(height: 10),
+              TextButton(
+                style: getPrimaryButtonStyle(),
+                onPressed: () async {
+                  // Validate returns true if the form is valid, or false otherwise.
+                  if (!_formKey.currentState!.validate()) {
+                    return;
+                  }
 
-                // Validation
-                if (username.isEmpty) {
-                  showSnackBar(context, 'Username is required.');
-                  return;
-                }
+                  final exists = await checkUsernameExist();
+                  if (!exists) {
+                    // Register user
+                    User user = await getIt<UserService>().create(_username.text, _password.text);
+                    debugPrint(user.toString());
 
-                if (password.isEmpty) {
-                  showSnackBar(context, 'Password is required.');
-                  return;
-                }
+                    // Login
+                    await getIt<AuthService>().authenticate(user);
+                    // notify user have logged-in
+                    providerAuth.checkAuthentication();
 
-                if (rePassword.isEmpty) {
-                  showSnackBar(context, 'Re-type the password.');
-                  return;
-                }
-
-                if (password != rePassword) {
-                  showSnackBar(context, 'Password does not match.');
-                  return;
-                }
-
-                final existingUser = await getIt<UserService>().findByUsername(username);
-                if (existingUser != null) {
-                  if (!context.mounted) return;
-                  showSnackBar(context, 'The username is already in use. Try another one.');
-                  return;
-                }
-
-                // Register user
-                User user = await getIt<UserService>().create(username, password);
-                debugPrint(user.toString());
-
-                // Login
-                await getIt<AuthService>().authenticate(user);
-                // notify user have logged-in
-                providerAuth.checkAuthentication();
-
-                if (!context.mounted) return;
-                showSnackBar(context, 'User registration is successful.');
-              },
-              child: const Text('Register'),
-            ),
-            const SizedBox(height: 10),
-            TextButton(
-              onPressed: () => providerNav.loginNav(),
-              child: const Text('Already have an account? login here')
-            )
-          ],
+                    if (!context.mounted) return;
+                    showSnackBar(context, 'User registration is successful.');
+                  }
+                },
+                child: const Text('Register'),
+              ),
+              const SizedBox(height: 10),
+              TextButton(
+                onPressed: () => providerNav.loginNav(),
+                child: const Text('Already have an account? login here')
+              )
+            ],
+          ),
         ),
       ),
     );

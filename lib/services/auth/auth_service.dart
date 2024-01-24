@@ -14,19 +14,25 @@ class AuthService {
 
   AuthService(this.userService, this.storage);
 
+  static String? getError(int errNo) {
+    switch (errNo) {
+      case 1:
+        return 'Username does not exist.';
+      case 2:
+        return 'Password does not match.';
+      default:
+        return null;
+    }
+  }
+
   /// Perform user authentication
-  Future<Object> login(String username, password) async {
+  Future<User?> login(String username, password) async {
     User? user = await getIt<UserService>().findByUsername(username);
-    if (user == null) {
-      return 'Username does not exist.';
+    if (user != null) {
+      await authenticate(user);
+    } else {
+      debugPrint(getError(1));
     }
-
-    debugPrint('Verifying password...');
-    if (!DBCrypt().checkpw(password, user.password)) {
-      return 'Password does not match.';
-    }
-
-    await authenticate(user);
 
     return user;
   }
@@ -34,6 +40,22 @@ class AuthService {
   /// Remove local storage for user session
   Future<void> logout() async {
     await storage.remove('auth');
+  }
+
+  /// Check user exists by username and password
+  /// and return an exact error no. if not exist
+  Future<int> validateUser(String username, String password) async {
+    User? user = await getIt<UserService>().findByUsername(username);
+    if (user == null) {
+      return 1;
+    }
+
+    debugPrint('Verifying password...');
+    if (!DBCrypt().checkpw(password, user.password)) {
+      return 2;
+    }
+
+    return 0;
   }
 
   /// Store user data in secure storage (alike Session)
