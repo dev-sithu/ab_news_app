@@ -13,19 +13,22 @@ class AuthUser {
     required this.timestamp
   });
 
-  /// Get an default empty object
-  factory AuthUser.getSkeleton() => AuthUser(
-    id: 0,
-    username: '',
-    timestamp: DateTime.now().millisecondsSinceEpoch,
-  );
+  /// Convert json data to AuthUser object or return an empty object
+  factory AuthUser.create(Map<String, dynamic>? data) {
+    if (data != null) {
+      return AuthUser(
+        id: data['id'],
+        username: data['username'],
+        timestamp: data['timestamp'],
+      );
+    }
 
-  /// Convert json data to AuthUser object
-  factory AuthUser.fromJson(Map<String, dynamic> data) => AuthUser(
-    id: data['id'],
-    username: data['username'],
-    timestamp: data['timestamp'],
-  );
+    return AuthUser(
+      id: 0,
+      username: '',
+      timestamp: DateTime.now().millisecondsSinceEpoch,
+    );
+  }
 
   /// Convert user entity to json
   static Map<String, dynamic> toJson(User user) => {

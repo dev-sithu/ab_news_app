@@ -76,9 +76,9 @@ class AuthService {
   Future<AuthUser> getUser() async {
     final auth = await storage.read('auth');
     if (auth != null) {
-       return AuthUser.fromJson(json.decode(auth));
+       return AuthUser.create(json.decode(auth));
     }
 
-    return AuthUser.getSkeleton();
+    return AuthUser.create(null);
   }
 }
