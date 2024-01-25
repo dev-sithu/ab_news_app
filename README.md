@@ -42,6 +42,6 @@ In VS Code, press **F5** to run the app with web platform option.
 - ~~Faster password hashing in register/login form submit~~
 - ~~Better form validation~~
 - Better error handling
-- Prevent API recall on tab switch (add swipe down event to update data or add a refresh button)
+- ~~Prevent API recall on tab switch (add swipe down event to update data or add a refresh button)~~
 - Infinite scroll for news list in home page
 - Internationalization
