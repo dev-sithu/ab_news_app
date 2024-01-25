@@ -38,7 +38,7 @@ class NewsApiService {
       }
     }
 
-    return Future.value(newsList);
+    return newsList;
   }
 
   /// Get news details

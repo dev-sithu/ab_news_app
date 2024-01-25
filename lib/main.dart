@@ -1,5 +1,6 @@
 import 'package:ab_news_app/config/app_theme.dart';
 import 'package:ab_news_app/inject_container.dart';
+import 'package:ab_news_app/providers/article_provider.dart';
 import 'package:ab_news_app/providers/auth_provider.dart';
 import 'package:ab_news_app/providers/favorite_provider.dart';
 import 'package:ab_news_app/providers/nav_provider.dart';
@@ -31,6 +32,7 @@ class MyApp extends StatelessWidget {
           update: (context, auth, nav) => NavProvider(auth),
           create: (BuildContext context) => NavProvider(null),
         ),
+        ChangeNotifierProvider(create: (context) => ArticleProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
