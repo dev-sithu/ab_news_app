@@ -11,14 +11,37 @@ class NewsApiService {
   NewsApiService(this.dio);
 
   // Get recent news
-  Future<List<Article>> getNewStories() async {
+  Future<List<List<int>>> getNewStories() async {
+    List<List<int>> newsIds = [];
+
     final response = await dio.get('$newsAPIBaseURL/newstories.json');
-    final recentNews = response.data.sublist(0, 15);
+    List<int> data = List<int>.from(response.data);
+    // Slice array of item id into pages
+    var start = 0;
+    while (start < data.length) {
+      var end = start + pagerLimit;
+      if (end > data.length) end = data.length;
+
+      newsIds.add(data.sublist(start, end));
+      start = start + pagerLimit;
+    }
+
+    return newsIds;
+  }
+
+  /// Get news details
+  Future<Map<String, dynamic>> getStory(int id) async {
+    final response = await dio.get('$newsAPIBaseURL/item/$id.json');
+
+    return response.data;
+  }
+
+  Future<List<Article>> getStoryDetails(List<int> articles) async {
     List<Article> newsList = [];
     ArticleService articleService = getIt<ArticleService>();
     Map<String, dynamic> news;
 
-    for (var id in recentNews) {
+    for (var id in articles) {
       debugPrint('trying to get local story ...');
       Article ? item = await articleService.findByItem(id);
 
@@ -39,12 +62,5 @@ class NewsApiService {
     }
 
     return newsList;
-  }
-
-  /// Get news details
-  Future<Map<String, dynamic>> getStory(int id) async {
-    final response = await dio.get('$newsAPIBaseURL/item/$id.json');
-
-    return response.data;
   }
 }
