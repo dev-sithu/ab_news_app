@@ -1,5 +1,5 @@
 import 'package:ab_news_app/pages/favorites.dart';
-import 'package:ab_news_app/pages/home.dart';
+import 'package:ab_news_app/pages/home_pager.dart';
 import 'package:ab_news_app/pages/login.dart';
 import 'package:ab_news_app/pages/mypage.dart';
 import 'package:ab_news_app/pages/register.dart';
@@ -21,7 +21,7 @@ class NavProvider extends ChangeNotifier {
 
   void loginNav() {
     _pages = [
-      const Home(),
+      const HomePager(),
       const Favorites(),
       const Login(),
     ];
@@ -31,7 +31,7 @@ class NavProvider extends ChangeNotifier {
 
   void registerNav() {
     _pages = [
-      const Home(),
+      const HomePager(),
       const Favorites(),
       const Register(),
     ];
@@ -41,7 +41,7 @@ class NavProvider extends ChangeNotifier {
 
   void mypageNav() {
     _pages = [
-      const Home(),
+      const HomePager(),
       const Favorites(),
       const Mypage(),
     ];
